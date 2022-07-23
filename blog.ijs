@@ -7,7 +7,7 @@ ensure =: {{ if. -. fexist y do. 1 !: 5 <y else. 0 end. }}
 
 join =: ('//';'/') stringreplace [ , '/' , ]
 
-fmrx =: rxcomp '^\/\/ ?(.+): ?(.+)$'
+fmrx =: rxcomp '^\/\/ ?(.+?): ?(.+?)$'
 
 parseFrontMatter =: {{
   mask =. ([: *./\ [: ; {.@E.~&'//'&.>) y
@@ -17,7 +17,26 @@ parseFrontMatter =: {{
   fm ; rest
 }}
 
+mustacherx =: rxcomp '\{\{(.+?)\}\}'
+
+NB. x: values to fill with
+NB. y: mustache to replace
+fillMustache =: {{
+  NB. remove leading {{ and trailing }}
+  y =. ({.~ -&2 @ #) 2 }. y
+  NB. look up and retrieve from x
+  ({:"1 x) {::~ ({."1 x) i. <y
+}}
+
+NB. Replace template fields present with their
+NB. provided values.
+NB. x: the value to fill, as a boxed matrix
+NB. y: the template
+NB. returns: the modified template
+fillTemplate =: {{ mustacherx x&fillMustache rxapply y }}
+
 processFile =: {{
+  template =. m
   NB. destination filename
   name =. 1 {:: fpathname y
   ensure x
@@ -27,16 +46,22 @@ processFile =: {{
   NB. read input file
   'fm contents' =. parseFrontMatter 'b' freads y
   body =. markdown contents
+  fm =. ('body' ; body) , fm
 
   NB. todo use front matter
+  template =. fm fillTemplate template
 
   NB. write output file
-  body fwrite dest
+  template fwrite dest
+
+  NB. return the frontmatter
+  fm
 }}
 
 processDir =: {{
   in =. y join 'md'
   out =. y join '_html'
+  articleTemplate =. fread 0 {:: 1 dir ('article.html' ,~ y join 'templates')
   files =. 1 dir in join '*.md'
-  out&processFile&.> files
+  fms =. out (articleTemplate processFile)&.(a:`>) files
 }}
