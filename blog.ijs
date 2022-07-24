@@ -107,11 +107,12 @@ processDir =: {{
   NB. Sort by date, descending
   dates =. > (getdate @ aaget&'date')&.> fms
   fms =. fms \: dates
-  NB. Create contents
+  NB. Create index file
+  intro =. markdown fread 'index.md'
   contentsTemplate =. getTemplate 'contents.html'
   contents =. LF joinstring (fillTemplate&contentsTemplate)&.> fms
   indexTemplate =. getTemplate 'index.html'
-  index =. indexTemplate fillTemplate~ 'contents' ; contents
+  index =. indexTemplate fillTemplate~ ('intro' ; intro) ,: 'contents' ; contents
   index fwrite out join 'index.html'
   NB. Copy _assets into _site
   NB. assuming we're on a unix system
