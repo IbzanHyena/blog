@@ -13,6 +13,12 @@ join =: ('//';'/') stringreplace [ , '/' , ]
 NB. front matter regex
 fmrx =: rxcomp '^\/\/ ?(.+?): ?(.+?)$'
 
+NB. retrieve a cell from a boxed associative array
+NB. the AA should have two columns: first is the key, second is the value
+NB. x: AA
+NB. y: key
+aaget =: {{ ({:"1 x) {::~ ({."1 x) i. <y }}
+
 NB. current unused as dircopy causes a segfault in the interpreter
 NB. copy the file on the right to the file on the left
 NB. boxed filenames or file numbers for both arguments
@@ -52,7 +58,7 @@ fillMustache =: {{
   NB. remove leading {{ and trailing }}
   y =. ({.~ -&2 @ #) 2 }. y
   NB. look up and retrieve from x
-  ({:"1 x) {::~ ({."1 x) i. <y
+  x aaget y
 }}
 
 NB. Replace template fields present with their
@@ -98,6 +104,9 @@ processDir =: {{
   articleTemplate =. getTemplate 'article.html'
   files =. 1 dir in join '*.md'
   fms =. out (articleTemplate processFile)&.(a:`>) files
+  NB. Sort by date, descending
+  dates =. > (getdate @ aaget&'date')&.> fms
+  fms =. fms \: dates
   NB. Create contents
   contentsTemplate =. getTemplate 'contents.html'
   contents =. LF joinstring (fillTemplate&contentsTemplate)&.> fms
