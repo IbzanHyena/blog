@@ -15,6 +15,6 @@ Within this, create a Markdown source directory.
 Process this source into HTML by running `jconsole /path/to/run.ijs md` where
 `md` is the name of the markdown source directory.
 
-This will create an output directory called `_html` and containing the HTML
+This will create an output directory called `_site` and containing the HTML
 files.
 
