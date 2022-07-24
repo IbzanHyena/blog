@@ -1,4 +1,5 @@
 require 'regex'
+require '~Projects/relimport/relimport.ijs'
 relrequire '../md/md.ijs'
 
 NB. split a file name into a boxed array of extensions
