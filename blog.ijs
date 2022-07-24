@@ -98,7 +98,7 @@ processFile =: {{
 
 processDir =: {{
   NB. Create articles
-  in =. y join 'md'
+  in =. y join 'articles'
   out =. y join '_site'
   templates =. y join 'templates'
   getTemplate =. templates {{ fread 0 {:: 1 dir m join y }}
