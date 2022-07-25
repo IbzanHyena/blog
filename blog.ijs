@@ -89,11 +89,8 @@ processFile =: {{
   NB. write output file
   template fwrite dest
 
-  NB. Get size
-  size =. ": fsize dest
-
   NB. return the frontmatter
-  fm ,~ 'size' ; size
+  fm
 }}
 
 processDir =: {{
