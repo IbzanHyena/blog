@@ -1,3 +1,5 @@
 [submodule "md"]
 	path = md
 	url = https://github.com/IbzanHyena/md.git
+	branch = main
+
