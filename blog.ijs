@@ -1,5 +1,6 @@
 require 'regex'
 require 'general/dirtrees'
+require 'general/dirutils'
 require '~Projects/relimport/relimport.ijs'
 relrequire 'md/md.ijs'
 
@@ -7,7 +8,7 @@ NB. split a file name into a boxed array of extensions
 extensions =: '.' <;._1 @ , ]
 
 NB. ensure that a directory exists
-ensure =: {{ if. -. fexist y do. 1 !: 5 <y else. 0 end. }}
+ensure =: {{ if. -. direxist y do. dircreate <y else. 0 end. }}
 
 NB. join together two parts of a path
 join =: ('//';'/') stringreplace [ , '/' , ]
@@ -91,5 +92,6 @@ processDir =: {{
   index =. indexTemplate fillTemplate~ ('intro' ; intro) ,: 'contents' ; contents
   index fwrite out join 'index.html'
   NB. Copy _assets into _site
+  ensure '_site/assets'
   '_site/assets' copytree '_assets'
 }}
