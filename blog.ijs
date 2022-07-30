@@ -1,4 +1,5 @@
 require 'regex'
+require 'general/dirtrees'
 require '~Projects/relimport/relimport.ijs'
 relrequire 'md/md.ijs'
 
@@ -19,29 +20,6 @@ NB. the AA should have two columns: first is the key, second is the value
 NB. x: AA
 NB. y: key
 aaget =: {{ ({:"1 x) {::~ ({."1 x) i. <y }}
-
-NB. current unused as dircopy causes a segfault in the interpreter
-NB. copy the file on the right to the file on the left
-NB. boxed filenames or file numbers for both arguments
-NB. fcopy =: [ 1!:2~ [: 1!:1 ]
-NB.
-NB. NB. copy directory y to x
-NB. dircopy =: {{
-NB.   ensure x
-NB.   contents =. |: 0 _1 {"1 (2 1) dir y
-NB.   filepaths =. {. contents
-NB.   NB. unbox here to get a matrix
-NB.   permissions =. > {: contents
-NB.   isSubdir =. 'd' = {."1 permissions
-NB.   NB. copy files across
-NB.   cp =. {{ (< m join y) fcopy (< n join y) }}
-NB.   echo 'copying files'
-NB.   (x cp y)&.> filepaths #~ -. isSubdir
-NB.   NB. recurse for subdirectories
-NB.   rec =: {{ (m join y) dircopy (n join y) }}
-NB.   echo 'recursing'
-NB.   (x rec y) &.> filepaths #~ isSubdir
-NB. }}
 
 parseFrontMatter =: {{
   mask =. ([: *./\ [: ; {.@E.~&'//'&.>) y
@@ -113,6 +91,5 @@ processDir =: {{
   index =. indexTemplate fillTemplate~ ('intro' ; intro) ,: 'contents' ; contents
   index fwrite out join 'index.html'
   NB. Copy _assets into _site
-  NB. assuming we're on a unix system
-  2!:0 'cp -r _assets _site/assets'
+  '_site/assets' copytree '_assets'
 }}
