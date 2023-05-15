@@ -48,7 +48,7 @@ NB. y: the template
 NB. returns: the modified template
 fillTemplate =: {{ mustacherx x&fillMustache rxapply y }}
 
-processFile =: {{
+processBlogPost =: {{
   template =. m
   NB. destination filename
   name =. 1 {:: fpathname y
@@ -80,7 +80,7 @@ processDir =: {{
   getTemplate =. templates {{ fread 0 {:: 1 dir m join y }}
   articleTemplate =. getTemplate 'article.html'
   files =. 1 dir in join '*.md'
-  fms =. out (articleTemplate processFile)&.(a:`>) files
+  fms =. out (articleTemplate processBlogPost)&.(a:`>) files
   NB. Sort by date, descending
   dates =. > (getdate @ aaget&'date')&.> fms
   fms =. fms \: dates
@@ -91,6 +91,11 @@ processDir =: {{
   indexTemplate =. getTemplate 'index.html'
   index =. indexTemplate fillTemplate~ ('intro' ; intro) ,: 'contents' ; contents
   index fwrite out join 'index.html'
+  NB. Create 404 file
+  p404 =. markdown fread '404.md'
+  p404Template =. getTemplate '404.html'
+  p404 =. p404Template fillTemplate~ 'body' ; p404
+  p404 fwrite out join '404.html'
   NB. Copy _assets into _site
   ensure '_site/assets'
   '_site/assets' copytree '_assets'
