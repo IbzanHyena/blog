@@ -23,9 +23,9 @@ NB. y: key
 aaget =: {{ ({:"1 x) {::~ ({."1 x) i. <y }}
 
 parseFrontMatter =: {{
-  mask =. ([: *./\ [: ; {.@E.~&'//'&.>) y
+  mask =. *./\ {.@E.~&'//'@> y
   extract =. fmrx 1 2 rxextract ]
-  fm =. ; extract &.> y #~ mask
+  fm =. extract@> y #~ mask
   rest =. LF joinstring y #~ -. mask
   fm ; rest
 }}
@@ -82,7 +82,7 @@ processDir =: {{
   files =. 1 dir in join '*.md'
   fms =. out (articleTemplate processBlogPost)&.(a:`>) files
   NB. Sort by date, descending
-  dates =. > (getdate @ aaget&'date')&.> fms
+  dates =. (getdate @ aaget&'date')@> fms
   fms =. fms \: dates
   NB. Create index file
   intro =. markdown fread 'index.md'
