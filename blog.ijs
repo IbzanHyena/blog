@@ -32,7 +32,7 @@ parseFrontMatter =: {{
   NB. prepare the title-header frontmatter
   title =. fm aaget 'title'
   id =. sanitise LF -.~ tolower title
-  anchor =. ('a'; <'id' ; id ; 'href' ; '#',id) htmlElementA inlineFormatting text
+  anchor =. ('a'; <'id' ; id ; 'href' ; '#',id) htmlElementA inlineFormatting title
   titleHeader =. (tag ; <'class';'header') htmlElementA anchor
   fm =. fm , 'title-header' ; titleHeader
 
