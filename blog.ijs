@@ -23,10 +23,20 @@ NB. y: key
 aaget =: {{ ({:"1 x) {::~ ({."1 x) i. <y }}
 
 parseFrontMatter =: {{
+  NB. separate the input into frontmatter and rest
   mask =. *./\ {.@E.~&'//'@> y
   extract =. [: , fmrx 1 2 rxextract ]
   fm =. extract@> y #~ mask
   rest =. LF joinstring y #~ -. mask
+
+  NB. prepare the title-header frontmatter
+  title =. fm aaget 'title'
+  id =. sanitise LF -.~ tolower title
+  anchor =. ('a'; <'id' ; id ; 'href' ; '#',id) htmlElementA inlineFormatting text
+  titleHeader =. (tag ; <'class';'header') htmlElementA anchor
+  fm =. fm , 'title-header' ; titleHeader
+
+  NB. return the frontmatter and the rest of the article
   fm ; rest
 }}
 
