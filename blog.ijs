@@ -24,7 +24,7 @@ aaget =: {{ ({:"1 x) {::~ ({."1 x) i. <y }}
 
 parseFrontMatter =: {{
   mask =. *./\ {.@E.~&'//'@> y
-  extract =. fmrx 1 2 rxextract ]
+  extract =. [: , fmrx 1 2 rxextract ]
   fm =. extract@> y #~ mask
   rest =. LF joinstring y #~ -. mask
   fm ; rest
